@@ -6,7 +6,7 @@ import disconnected
 import os
 from pathlib import Path
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-##t = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+t = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #addr='192.168.124.118'
 #addr='192.168.162.118'
 #s.bind(('10.144.119.197',80))
@@ -17,27 +17,27 @@ addr='0.0.0.0'
 #addr = '192.168.137.1'
 print(int(os.environ.get("PORT", 8000)))
 s.bind((addr,int(os.environ.get("PORT", 8000))))
-##t.bind((addr,80))
+t.bind((addr,443))
 #s.bind(('172.20.10.2',8000))
 s.listen()
 s.setblocking(False)
-##t.listen()
-##t.setblocking(False)
-##print(str(Path.cwd()) + r'\test.html')
-##with open(str(Path.cwd()) + r'\test.html') as f:
-    ##clientCode=f.read()
+t.listen()
+t.setblocking(False)
+print(str(os.path.realpath(os.path.dirname(__file__))) + r'\test.html')
+with open(str(os.path.realpath(os.path.dirname(__file__))) + r'\test.html') as f:
+    clientCode=f.read()
 games = {}
 cList=[]
 waitroom=[]
 pList=[]
 pDict={}
 while True:
-    print(int(os.environ.get("PORT", 8000)))
-    #try:
-        #(connection,address)=t.accept()
-        #connection.send(("""HTTP/1.1 200 OK"""+clientCode).encode())
-    #except BlockingIOError:
-        #pass
+    #print(int(os.environ.get("PORT", 8000)))
+    try:
+        (connection,address)=t.accept()
+        connection.send(("""HTTP/1.1 200 OK"""+clientCode).encode())
+    except BlockingIOError:
+        pass
     try:
         (connection,address)=s.accept()
         cList.append(connection)
