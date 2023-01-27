@@ -20,8 +20,8 @@ s.listen()
 s.setblocking(False)
 #t.listen() <-
 #t.setblocking(False) <-
-with open(r'C:\Users\samue\OneDrive\Documents\Quicksweeper\test.html') as f:
-    clientCode=f.read()
+#with open(r'C:\Users\samue\OneDrive\Documents\Quicksweeper\test.html') as f:
+    #clientCode=f.read()
 games = {}
 cList=[]
 waitroom=[]
