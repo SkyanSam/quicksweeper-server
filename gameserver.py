@@ -17,7 +17,7 @@ addr='0.0.0.0'
 #addr = '192.168.137.1'
 print(int(os.environ.get("PORT", 8000)))
 s.bind((addr,int(os.environ.get("PORT", 8000))))
-t.bind((addr,443))
+t.bind((addr,8080))
 #s.bind(('172.20.10.2',8000))
 s.listen()
 s.setblocking(False)
