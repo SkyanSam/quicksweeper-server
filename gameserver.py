@@ -14,12 +14,12 @@ addr='0.0.0.0'
 #addr = '192.168.1.240'
 #addr = '192.168.137.1'
 s.bind((addr,8000))
-t.bind((addr,80))
+#t.bind((addr,80)) <-
 #s.bind(('172.20.10.2',8000))
 s.listen()
 s.setblocking(False)
-t.listen()
-t.setblocking(False)
+#t.listen() <-
+#t.setblocking(False) <-
 with open(r'C:\Users\samue\OneDrive\Documents\Quicksweeper\test.html') as f:
     clientCode=f.read()
 games = {}
@@ -29,10 +29,8 @@ pList=[]
 pDict={}
 while True:
     try:
-        (connection,address)=t.accept()
-        connection.send(("""HTTP/1.1 200 OK
-
-"""+clientCode).encode())
+        #(connection,address)=t.accept() <-
+        #connection.send(("""HTTP/1.1 200 OK"""+clientCode).encode()) <-
     except BlockingIOError:
         pass
     try:
