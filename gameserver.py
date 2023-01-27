@@ -32,6 +32,7 @@ waitroom=[]
 pList=[]
 pDict={}
 while True:
+    print(int(os.environ.get("PORT", 8000)))
     #try:
         #(connection,address)=t.accept()
         #connection.send(("""HTTP/1.1 200 OK"""+clientCode).encode())
