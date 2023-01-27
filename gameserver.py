@@ -9,7 +9,7 @@ t = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #addr='192.168.162.118'
 #s.bind(('10.144.119.197',80))
 #s.bind(('192.168.1.240',8000))
-addr='https://quicksweeper-server.herokuapp.com/'
+addr='0.0.0.0'
 #addr='192.168.0.37'
 #addr = '192.168.1.240'
 #addr = '192.168.137.1'
