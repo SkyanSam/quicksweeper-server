@@ -28,11 +28,11 @@ waitroom=[]
 pList=[]
 pDict={}
 while True:
-    try:
+    #try:
         #(connection,address)=t.accept() <-
         #connection.send(("""HTTP/1.1 200 OK"""+clientCode).encode()) <-
-    except BlockingIOError:
-        pass
+    #except BlockingIOError:
+        #pass
     try:
         (connection,address)=s.accept()
         cList.append(connection)
