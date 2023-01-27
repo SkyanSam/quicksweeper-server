@@ -23,8 +23,8 @@ s.listen()
 s.setblocking(False)
 t.listen()
 t.setblocking(False)
-print(str(os.path.realpath(os.path.dirname(__file__))) + r'\test.html')
-with open(str(os.path.realpath(os.path.dirname(__file__))) + r'\test.html') as f:
+print(str(os.path.realpath(os.path.dirname(__file__))) + '/test.html')
+with open(str(os.path.realpath(os.path.dirname(__file__))) + '/test.html') as f:
     clientCode=f.read()
 games = {}
 cList=[]
