@@ -1,6 +1,13 @@
 #Tools for standard minesweeper variants in release 1
 from base import *
-def Minesweeper(boardsize, pMine, isLegal, mineSelect):
+def claimDefault(self,n,x,y):
+    self.board[x][y]=n
+    for player in self.playerList:
+        if player.name==n:
+            player.send((str(x)+'\n'+str(y)+'\nc'+str(mineCount(self,x,y))).encode())
+        else:
+            player.send((str(x)+'\n'+str(y)+'\no'+str(n)).encode())
+def Minesweeper(boardsize, pMine, isLegal, mineSelect,claimSquare=claimDefault):
     def addPlayer(self, p):
         p.send(('multiplayer minesweeper\n'+str(boardsize)+'\n'+str(pMine)).encode())
         if self.started:
@@ -24,6 +31,8 @@ def Minesweeper(boardsize, pMine, isLegal, mineSelect):
             for y in range(self.boardsize):
                 if self.board[x][y]==None:
                     p.send((str(x)+'\n'+str(y)+'\nsN').encode())
+                elif self.board[x][y]==-1:
+                    p.send((str(x)+'\n'+str(y)+'\nc'+str(mineCount(self,x,y))).encode())
                 elif self.board[x][y]!=0 and self.board[x][y]!=1:
                     p.send((str(x)+'\n'+str(y)+'\no'+self.board[x][y]).encode())
         return True
@@ -46,6 +55,8 @@ def Minesweeper(boardsize, pMine, isLegal, mineSelect):
             if self.squaresFound+self.numMines+self.squaresRemoved==self.boardsize*self.boardsize:
                 for player in self.playerList:
                     message(player,'Game over. Your score was '+str(player.squaresFound))
+        elif self.board[x][y]==-1:
+            pass
         elif self.board[x][y]!=None:
             p.send((str(x)+'\n'+str(y)+'\no'+self.board[x][y]).encode())
     def initSelection(self,p,x,y):
@@ -98,10 +109,3 @@ def mineCount(self,x,y):
                 if self.board[i][j]==1:
                     c+=1
     return c
-def claimSquare(self,n,x,y):
-    self.board[x][y]=n
-    for player in self.playerList:
-        if player.name==n:
-            player.send((str(x)+'\n'+str(y)+'\nc'+str(mineCount(self,x,y))).encode())
-        else:
-            player.send((str(x)+'\n'+str(y)+'\no'+str(n)).encode())

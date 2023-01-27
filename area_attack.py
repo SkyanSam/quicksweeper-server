@@ -17,7 +17,7 @@ def areaAttackLegalMove(self,p,x,y):
     elif self.stage==1:
         if freeze.isFrozen(self,p):
             return False
-        if time.time()-self.attackTime>18:
+        if time.time()-self.attackTime>60:
                 for player in self.playerList:
                     message(player,'Stage 3 has started.')
                 self.stage=2
@@ -46,11 +46,10 @@ def init(d):
     g.pMine=pMine
     g.freezeTime=15
     g.stage=0
-    b=maze.main(boardsize-1)
-    for i in range(boardsize):
+    '''for i in range(boardsize):
         for j in range(boardsize):
-            #if (i-boardsize/2)**2+(j-boardsize/2)**2>boardsize**2/4:
-            if b[i][j]==1:
-                attack.removeSquare(g,i,j)
+            if (i-boardsize/2)**2+(j-boardsize/2)**2>boardsize**2/4:
+                attack.removeSquare(g,i,j)'''
+    #maze.drawMaze(g.board,None)
     return g
 base.gameTypes['area attack']=init

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 	<html>
 		<script>
-//var ws2 = new WebSocket('ws://'+window.location.host+':8000');
-var ws2 = new WebSocket('ws://localhost:8000');
+var ws2 = new WebSocket('ws://'+window.location.host+':8000');
 ws2.onmessage=function(m){
 	//Send the name that the user enters to the server. This happens as soon as the server prompts the client to enter a name.
 	name=prompt(m.data);
@@ -17,6 +16,10 @@ function setupLobby(){
 	let refresh=document.body.appendChild(document.createElement('button'));
 	refresh.innerText='refresh';
 	refresh.onclick=setupLobby;
+	document.body.appendChild(document.createElement('br'));
+	let create=document.body.appendChild(document.createElement('button'));
+	create.innerText='Create game';
+	create.onclick=function(){ws2.send('n'+prompt('Game name')+'\narea attack'+'\n'+prompt('board size')+'\n.2');refresh.onclick()}
 	document.body.appendChild(document.createElement('br'));
 	//request a list of games from the server
 	ws2.send('g');
@@ -142,7 +145,7 @@ function setupMinesweeper(boardsize){
 		//Square is revealed:
 		if(code=='c'){
 			//If this square was not already revealed:
-			console.log(board[x][y]);
+			//console.log(board[x][y]);
 			if(board[x][y]==''){
 				//Increase your score
 				score+=1
@@ -156,7 +159,7 @@ function setupMinesweeper(boardsize){
 			c.fillStyle='#000000';
 			c.fillText(data,x*s/boardsize,(y+1)*s/boardsize,s/boardsize);
 			//If there is a zero, then start recursive clearing
-			if(+data==0) {
+			if(data=='0') {
 				//iterate through surrounding squares
 				for(var a=x-1;a<=x+1;a++){
 					for(var b=y-1;b<=y+1;b++){
@@ -258,7 +261,7 @@ function setupMinesweeper(boardsize){
 	var hold;
 	//Handle user input
 	ce.onpointerdown=function(e){
-		console.log(e);
+		//console.log(e);
 		//Get x and y positions relative to the board
 		let x = Math.floor((e.x-ce.getBoundingClientRect().left)*boardsize/s);
 		let y = Math.floor((e.y-ce.getBoundingClientRect().top)*boardsize/s);

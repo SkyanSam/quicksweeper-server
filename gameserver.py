@@ -2,64 +2,25 @@ import base
 import number_guess
 import area_attack
 import socket
-from pathlib import Path
-import ssl
-import certifi
-import os
-
-# Create a context, just like as for the server
-server_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-server_context.verify_mode = ssl.CERT_REQUIRED
-client_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-client_context.verify_mode = ssl.CERT_REQUIRED
-
-#DHE-RSA-AES128-SHA256
-print(server_context.get_ciphers())
-#server_context.set_ciphers('ECDHE+AESGCM:!ECDSA') not necessary??
-#client_context.set_ciphers('ECDHE+AESGCM:!ECDSA')
-# Load the server's CA
-#context.load_verify_locations(certifi.where())
-server_context.load_verify_locations("./certificate.pem")
-client_context.load_verify_locations("./certificate.pem")
-#context.load_verify_locations(cafile=os.path.relpath(certifi.where()),capath=None,cadata=None)
-# Wrap the socket, just as like in the server.
-#context.wrap_socket(s, server_hostname='10.0.0.112')
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.IPPROTO_TLS)
-t = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.IPPROTO_TLS)
-s = server_context.wrap_socket(s, server_hostname='10.0.0.112')
-t = server_context.wrap_socket(t, server_hostname='10.0.0.112')
-
+import disconnected
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+t = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #addr='192.168.124.118'
 #addr='192.168.162.118'
 #s.bind(('10.144.119.197',80))
 #s.bind(('192.168.1.240',8000))
-#addr='73.133.51.103'
-#addr='localhost'
-addr='10.0.0.112'
+addr='https://quicksweeper-server.herokuapp.com/'
 #addr='192.168.0.37'
 #addr = '192.168.1.240'
 #addr = '192.168.137.1'
 s.bind((addr,8000))
 t.bind((addr,80))
 #s.bind(('172.20.10.2',8000))
-
-
-
-
 s.listen()
 s.setblocking(False)
 t.listen()
 t.setblocking(False)
-
-#s = ssl.wrap_socket (s, certfile='./certificate.pem', server_side=True, ssl_version=ssl.PROTOCOL_TLS)
-#t = ssl.wrap_socket (t, certfile='./certificate.pem', server_side=True, ssl_version=ssl.PROTOCOL_TLS)
-#s = ssl.wrap_socket(s, certfile='./certificate.pem', keyfile='./key.pem', server_side=True, ssl_version=ssl.PROTOCOL_TLS)
-#t = ssl.wrap_socket(t, certfile='./certificate.pem', keyfile='./key.pem', server_side=True, ssl_version=ssl.PROTOCOL_TLS)
-
-#r'test.html
-clientCode = ""
-with open(str(Path(__file__).parent.absolute())+r'\\test.html') as f:
+with open(r'C:\Users\samue\OneDrive\Documents\Quicksweeper\test.html') as f:
     clientCode=f.read()
 games = {}
 cList=[]
@@ -69,11 +30,9 @@ pDict={}
 while True:
     try:
         (connection,address)=t.accept()
-        #connection = ssl.wrap_socket(connection, certfile='./certificate.pem', keyfile='./key.pem', server_side=True, ssl_version=ssl.PROTOCOL_TLS)
-        #connection = client_context.wrap_socket(connection, server_hostname='10.0.0.112')
-        #connection.recv = connection.ssl_read
-        #connection.send = connection.ssl_write
-        #connection.send(("""HTTP/1.1 200 OK"""+clientCode).encode())
+        connection.send(("""HTTP/1.1 200 OK
+
+"""+clientCode).encode())
     except BlockingIOError:
         pass
     try:
@@ -83,15 +42,13 @@ while True:
         pass
     for c in cList:
         try:
-            #code=c.recv(1)
-            code=c.recv(0)
+            code=c.recv(1)
             print(code)
             if code==b'l':
                 cList.remove(c)
                 c=base.lengthPlayer(c)
                 waitroom.append(c)
             if code==b'G':
-                #handshake=c.recv(1000)
                 handshake=c.recv(1000)
                 cList.remove(c)
                 c=base.websocketPlayer(c,handshake)
@@ -99,6 +56,8 @@ while True:
                 waitroom.append(c)
             c.send(b'Send your name.')
         except BlockingIOError:
+            pass
+        except:
             pass
     for p in waitroom:
         try:
@@ -109,7 +68,8 @@ while True:
                 if '\n' in name:
                     p.send(b'Names cannot contain newlines.')
                 elif name in pDict:
-                    pDict[name].reconnect(p)
+                    #pDict[name].reconnect(p)
+                    p.send(b'This name is already in use.')
                     waitroom.remove(p)
                 else:
                     p.name=name
@@ -160,6 +120,7 @@ while True:
             print(e)
             print('Connection closed?')
             pList.remove(p)
+            del pDict[p.name]
             pass
     deleted=[]
     for g in games:
@@ -182,6 +143,8 @@ while True:
                 #raise e
                 print(e)
                 print('Connection closed?')
-                p.disconnect()
+                #p.disconnect()
+                games[g].playerList.remove(p)
+                del pDict[p.name]
     for g in deleted:
         del games[g]
