@@ -1,10 +1,10 @@
+
 import base
 import number_guess
 import area_attack
 import socket
 import disconnected
 import os
-from pathlib import Path
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 t = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #addr='192.168.124.118'
@@ -15,9 +15,8 @@ addr='0.0.0.0'
 #addr='192.168.0.37'
 #addr = '192.168.1.240'
 #addr = '192.168.137.1'
-print(int(os.environ.get("PORT", 8000)))
-s.bind((addr,int(os.environ.get("PORT", 8000))))
-t.bind((addr,8080))
+s.bind((addr,8000))
+t.bind((addr,80))
 #s.bind(('172.20.10.2',8000))
 s.listen()
 s.setblocking(False)
@@ -32,10 +31,11 @@ waitroom=[]
 pList=[]
 pDict={}
 while True:
-    #print(int(os.environ.get("PORT", 8000)))
     try:
         (connection,address)=t.accept()
-        connection.send(("""HTTP/1.1 200 OK"""+clientCode).encode())
+        connection.send(("""HTTP/1.1 200 OK
+
+"""+clientCode).encode())
     except BlockingIOError:
         pass
     try:
